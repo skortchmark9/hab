@@ -1,68 +1,31 @@
-// branch_test!!
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
 
-var canvas = document.getElementsByTagName("canvas")[0];
-var ctx = canvas.getContext("2d");
+var canvasSize = c.width;
+var numPixels = 8;
+var gridSize = canvasSize/numPixels;
 
-var FRAME_RATE = 300;
-var user;
-var imgData;
-var data;
 
-var tti = tti || (function(){
-    
-    var _args = {};
-    
-    return {
-        init : function(Args) {
-            _args = Args;
-        },
-        start : function(){
-            curr_index = _args[0];
-            main();
-        }
-    };
-}());
 
-function main(){
-    // Clear the canvas and resize it
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    resize_canvas();
-    
-    
-    ctx.fillStyle = "red";
-    ctx.fillRect(10, 10, 50, 50);
-    
-    imgData=ctx.getImageData(10,10,50,50);  // image data saved in the form of [p1_red, p1_green, p1_blue, p1_alpha, p2_red....]
-    ctx.putImageData(imgData,10,70);
-    
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    data = imgData.data;
-    
-    for (var i = 0; i < data.length; i += 4) {
-        data[i]     = 225 - data[i];     // red
-        data[i + 1] = 225 - data[i + 1]; // green
-        data[i + 2] = 225 - data[i + 2]; // blue
-    }
-        
-    ctx.putImageData(imgData, 0, 0);
-    
-    //start();
+
+ctx.fillStyle = "#FF0010";
+ctx.fillRect(0,0,c.width,c.height);
+
+
+for (var x = 0.0; x < c.width; x += gridSize) {
+  ctx.moveTo(x, 0);
+  ctx.lineTo(x, c.height);
 }
 
-function resize_canvas(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+for (var y = 0.0; y < c.height; y += gridSize) {
+  ctx.moveTo(0, y);
+  ctx.lineTo(c.width, y);
 }
 
-function start(){
-    loop = setInterval(function(){
-            draw();
-        }, FRAME_RATE
-    )
-}
+// ctx.moveTo(0,0);
+// ctx.lineTo(400,400);
 
-function draw(){
-    
-    
-}
+ctx.strokeStyle = "#ddd";
+ctx.stroke();
+
+//ctx.clearRect(0,0,canvasSize,canvasSize);
