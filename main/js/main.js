@@ -17,13 +17,27 @@ var background_y;
 var background_image;
 
 function user(x, y){
-    this.x = 500;
-    this.y = 500;
+    this.x = x;
+    this.y = y;
     this.sprite;
+    this.animation_set = {};
+    
+    this.is_walking = false;
+    this.is_jumping = false;
+    
+    
     this.draw = function(){
-        ctx.putImageData(this.sprite, this.x, this.y); 
-        //console.log("drawing sprite");
+        ctx.putImageData(this.sprite, this.x, this.y);
     }
+    this.add_animation = function(name, animation){
+        this.animation_set[name] = animation;
+        
+    }
+}
+
+// @param frames - an array of imgData
+function animation(frames){
+    this.frames = frames;
 }
 
 
@@ -33,6 +47,7 @@ var show_information = true;
 
 var x_min = 400;      // the minimum x-value before the background scrolls
 var x_max = 800;      // the maximum x-value before the background scrolls
+var ground_level = 800;     // ground level measured from the top of the page
 
 
 
@@ -41,8 +56,6 @@ var x_max = 800;      // the maximum x-value before the background scrolls
 // MAIN
 
 var hab = hab || (function(){
-    
-    
     return {
         init : function(Args) {
             _args = Args;
@@ -62,18 +75,17 @@ function main(){
     background_x = 100;
     background_y = 100;
     
-    
-    user = new user(0, 0);
-    ctx.fillStyle = "red";
-    ctx.fillRect(10, 10, 50, 50);
-    user.sprite = ctx.getImageData(10,10,50,50);
+    user = new user(200, ground_level);
+//    ctx.fillStyle = "red";
+//    ctx.fillRect(10, 10, 50, 50);
+//    user.sprite = ctx.getImageData(10,10,50,50);
+    user.sprite = color_to_imgdata("blue", 50, 50);
+//    user.sprite = url_to_imgdata("img/sprite_1.png", 50, 50); // contamination by cross-origin data
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     
     var data = user.sprite.data;
-    
-    
     
     init_keyboardevents();
     start();
@@ -95,19 +107,20 @@ function key_events(event){
             stop();
             break;
             
-            
+        // USER MOVEMENT
         case 37:        // LEFT arrow key
             move(-10);
             break;
         case 38:        // UP arrow key
-            user.y -= 3;
+            // JUMP
+            user.y -= 5;
             break;
         case 39:        // RIGHT arrow key
             move(10);
             break;
-        case 40:        // DOWN arrow key
-            user.y += 3;
-            break;
+//        case 40:        // DOWN arrow key
+//            user.y += 5;
+//            break;
     }
 }
 
@@ -139,10 +152,6 @@ function draw_background(){
 
 //////////// UTILITY FUNCTIONS
 
-function get_color_string(r, g, b, a){
-    return "rgba(" + r + "," + g + "," + b + "," + a + ")";
-}
-
 function resize_canvas(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -151,6 +160,10 @@ function resize_canvas(){
 function update_information(){
     i_x.innerHTML = "x: " + user.x;
     i_y.innerHTML = "y: " + user.y;
+}
+
+function get_color_string(r, g, b, a){
+    return "rgba(" + r + "," + g + "," + b + "," + a + ")";
 }
 
 //////////// USER MOVEMENT
@@ -164,8 +177,6 @@ function move(value){
             console.log("Moving Right");
             user.x += value;
         }
-        
-        
     } else {
         // Moving in the lEFT direction
         if (user.x <= x_min){
@@ -174,6 +185,41 @@ function move(value){
             console.log("Moving Left");
             user.x += value;
         }
-        
     }
+}
+
+// call these at the start of main
+// Setting height or width to -1 creates a sprite with the original height/width
+// @return returns an imgdata object given a url
+function url_to_imgdata(url, height, width){
+    var imgData;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var img = new Image();
+    img.src = url;
+    
+    img.onload = function(){
+        if (height == -1 || width == -1){
+            ctx.drawImage(img, 0, 0);
+            imgData = ctx.getImageData(0, 0, img.width, img.height);
+        } else {
+            ctx.drawImage(img, 0, 0, width, height);
+            imgData = ctx.getImageData(0, 0, width, height);
+        }
+    
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return imgData;
+    }
+}
+
+// @param: color is a string for a particular color, eg. red
+function color_to_imgdata(color, width, height){
+    var imgData;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, width, height);
+    imgData = ctx.getImageData(0, 0, width, height);
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    return imgData;
 }
