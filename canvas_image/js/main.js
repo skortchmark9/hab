@@ -6,16 +6,11 @@ var numPixels = 20;
 var gridSize = canvasSize/numPixels;
 var currentColor = '#ffffff';
 
+// init array
 var pixelArray = new Array(numPixels);
 for (var i = 0; i < numPixels; i++) {
   pixelArray[i] = new Array(numPixels);
 }
-
-
-var colors = ["#33CC33","#0099FF","#CC99FF","#FFFF00","#FF99CC"];
-var IND = 0;
-
-console.log(gridSize);
 
 function drawgrid(){
   for (var x = 0.0; x < c.width; x += gridSize) {
@@ -34,22 +29,21 @@ function drawgrid(){
 
 
 function init(){
-  //ctx.fillStyle = "#FF0010";
-  //ctx.fillRect(0,0,c.width,c.height);
 
-  drawgrid();
-  drawgrid();
-
-  for (i=0; i<numPixels; i++){
-    for (j=0; j<numPixels; j++){
-      pixelArray[i][j] = "#FF0010";
+  for (i=1; i<=numPixels; i++){
+    for (j=1; j<=numPixels; j++){
+      drawPixel(i,j,currentColor);
     }
   }
+  drawgrid();
+  drawgrid();
 }
 
 
 function drawPixel(pixFillx, pixFilly, color){
   color = color || currentColor;
+
+  pixelArray[pixFillx-1][pixFilly-1] = currentColor;
 
   ctx.fillStyle = color;
   ctx.fillRect((pixFillx-1)*gridSize,(pixFilly-1)*gridSize,gridSize,gridSize);
@@ -57,7 +51,7 @@ function drawPixel(pixFillx, pixFilly, color){
 
 
 
-//Matt's getmouse coordinates function
+// getmouse coordinates function
 function getMousePos(c, evt) {
   var rect = c.getBoundingClientRect();
   return {
@@ -70,23 +64,45 @@ c.addEventListener("mousemove", function(evt) {
   var mousePos = getMousePos(c, evt);
   var mouseX = Math.ceil(mousePos.x/gridSize)
   var mouseY = Math.ceil(mousePos.y/gridSize)
+
+  if (mouseDown) {
+    drawPixel(mouseX, mouseY);
+  }
+
   var message = 'Mouse position: ' + mouseX + ',' + mouseY;
-  console.log(message);
+  //console.log(message);
 }, false);
 
 
-//Matt's mouseClick Method
+// mouseClick Method
 document.getElementById('myCanvas').onclick = function(evt) {
+  var mousePos = getMousePos(c, evt);
+  var mouseX = Math.ceil(mousePos.x/gridSize);
+  var mouseY = Math.ceil(mousePos.y/gridSize);
+
+  drawPixel(mouseX,mouseY,currentColor);
+  drawgrid();
+}
+
+
+c.onclick = function(evt) {
+
   var mousePos = getMousePos(c, evt);
   var mouseX = Math.ceil(mousePos.x/gridSize);
   var mouseY = Math.ceil(mousePos.y/gridSize);
   drawPixel(mouseX,mouseY,currentColor);
 
-  pixelArray[mouseX-1][mouseY-1] = currentColor;
+  //pixelArray[mouseX-1][mouseY-1] = currentColor;
 
   drawgrid();
 }
 
-init();
+c.addEventListener("mousedown", function() {
+  mouseDown = true;
+}, false);
 
-//ctx.clearRect(0,0,canvasSize,canvasSize);
+window.addEventListener("mouseup", function() {
+  mouseDown = false;
+}, false);
+
+init();
