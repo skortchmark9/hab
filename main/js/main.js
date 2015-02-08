@@ -96,16 +96,16 @@ function key_events(event){
             break;
             
             
-        case 39:        // RIGHT arrow key
-            move(3);
-            break;
-        case 37:        // RIGHT arrow key
-            move(-3);
+        case 37:        // LEFT arrow key
+            move(-10);
             break;
         case 38:        // UP arrow key
             user.y -= 3;
             break;
-        case 40:        // LEFT arrow key
+        case 39:        // RIGHT arrow key
+            move(10);
+            break;
+        case 40:        // DOWN arrow key
             user.y += 3;
             break;
     }
@@ -161,6 +161,7 @@ function move(value){
         if (user.x >= x_max){
             background_x -= value;
         } else {
+            console.log("Moving Right");
             user.x += value;
         }
         
@@ -168,9 +169,10 @@ function move(value){
     } else {
         // Moving in the lEFT direction
         if (user.x <= x_min){
-            background_x += value;
+            background_x -= value;
         } else {
-            user.x -= value;
+            console.log("Moving Left");
+            user.x += value;
         }
         
     }
