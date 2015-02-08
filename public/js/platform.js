@@ -34,8 +34,8 @@ function user(x, y){
     this.sprite;
 
     this.sprite_list = new Array();
-//    this.sprite_resting;
-//    this.sprite_jumping;
+    this.sprite_resting;
+    this.sprite_jumping;
 
     this.walking = false;
     this.jumping = false;
@@ -77,6 +77,7 @@ var ground_level = 600;         // ground level measured from the top of the pag
 var friction = 0.8;
 var gravity = 0.5;
 var walking_interval = 1000;     // the delay before the frame for a walking animation changes
+var scale = 3;
 
 
 var hab = hab || (function(){
@@ -90,8 +91,8 @@ var hab = hab || (function(){
                     continue;
                 }
 
-                unflatten(arg[i].colors, arg[i].width, arg[i].height, true);
-                imgData_array[i] = e_ctx.getImageData(0,0,arg[i].width, arg[i].height);
+                unflatten(arg[i].colors, arg[i].width, arg[i].height, true, 3);
+                imgData_array[i] = e_ctx.getImageData(0,0, arg[i].width*scale, arg[i].height*scale);
                 console.log(imgData_array[i]);
 
                 e_ctx.clearRect(0,0, e_canvas.width, e_canvas.height);
@@ -136,7 +137,6 @@ function main(){
     for(var i = 0; i < num_poses; i++) {
         default_blocks.push(color_to_imgdata(defaults[i], 50, 50));
     }
-
 
     // WALKING
     if (imgData_array[0] == null){
@@ -214,8 +214,10 @@ function update(){
     e_ctx.clearRect(0, 0, e_canvas.width, e_canvas.height);
     resize_canvas();
 
-    draw_background();
     user.draw();
+    e_ctx.globalCompositeOperation='destination-over';
+    draw_background();
+    e_ctx.globalCompositeOperation='source-over';
     // TODO
     // draw_foreground();
 
