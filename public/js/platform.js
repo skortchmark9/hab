@@ -49,7 +49,9 @@ function user(x, y){
     this.right_walking_sprite_list = new Array();
 
     this.draw = function(){
-        e_ctx.putImageData(this.sprite, this.x, this.y);
+        if (imgData_array) {
+            e_ctx.putImageData(imgData_array[0], this.x, this.y);
+        }
     }
 
     // TODO
@@ -88,11 +90,14 @@ var hab = hab || (function(){
                     continue;
                 }
 
-                unflatten(arg[i].colors, arg[i].width, arg[i].height);
+                unflatten(arg[i].colors, arg[i].width, arg[i].height, true);
                 imgData_array[i] = e_ctx.getImageData(0,0,arg[i].width, arg[i].height);
-                e_ctx.clearRect(0,0, e_canvas.width, e_canvas.height);
+                console.log(imgData_array[i]);
 
+                e_ctx.clearRect(0,0, e_canvas.width, e_canvas.height);
             }
+
+            console.log("Image Data Array: ", imgData_array);
         },
         start : function(){
             main();
@@ -124,6 +129,7 @@ function main(){
     // push sprites for the character to use
     // 0 - resting sprite
     // 1 - jumping sprite
+    //TODO: move me
     var defaults = ["blue", "red", "green", "yellow", "orange", "purple", "white", "red", "blue", "purple"];
 
     var default_blocks = new Array();
@@ -194,6 +200,7 @@ function main(){
 
 
     user.sprite = user.sprite_list[0];
+
 
     init_keyboardevents();
 
