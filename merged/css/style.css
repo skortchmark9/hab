@@ -3,9 +3,8 @@ body{
 }
 
 canvas{
-    background: #e3e3e3;
+    #background: #e3e3e3;
     display: block;
-    position: absolute;
 }
 
 #src_img{
@@ -23,7 +22,6 @@ canvas{
 h1{
     font-family: 'Josefin Sans', sans-serif;
     font-weight: normal;
-    #font-size: medium;
     font-size: 20px;
     margin: 0;
     padding-left: 12px;
@@ -42,4 +40,28 @@ h2{
     z-index: 1000;
     bottom: 100px;
     left: 30px;
+}
+
+#environment{
+    position: absolute;
+}
+
+#creation{
+    position: absolute;
+    z-index: 100;
+    top: 200px;
+    left: 200px;
+    background: #FFFFFF;
+    padding: 5px;
+}
+
+#creation_canvas{
+    z-index: 100;
+    margin-top: 10px;
+    background: #CCCCCC
+}
+
+#environment_canvas{
+    background: #333333
+    
 }

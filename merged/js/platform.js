@@ -1,16 +1,18 @@
-var canvas = document.getElementsByTagName("canvas")[0];
-var ctx = canvas.getContext("2d");
+//var canvas = document.getElementsByTagName("canvas")[0];
+var e_canvas = document.getElementById("environment_canvas");
+
+var e_ctx = e_canvas.getContext("2d");
 
 // Information to be printed out
 var i_x = document.getElementById("i_x");
 var i_y = document.getElementById("i_y");
-var i_movement = document.getElementById("i_movement")
+var i_movement = document.getElementById("i_movement");
 
 var user;
 var keys = [];
 
-var HEIGHT = canvas.height;
-var WIDTH = canvas.width;
+var HEIGHT = e_canvas.height;
+var WIDTH = e_canvas.width;
 
 var background_image;
 var background_width = 2000;
@@ -45,7 +47,7 @@ function user(x, y){
     this.right_walking_sprite_list = new Array();
     
     this.draw = function(){
-        ctx.putImageData(this.sprite, this.x, this.y);
+        e_ctx.putImageData(this.sprite, this.x, this.y);
     }
     
     // TODO
@@ -140,7 +142,7 @@ function main(){
 
 function update(){
     update_movement();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    e_ctx.clearRect(0, 0, e_canvas.width, e_canvas.height);
     resize_canvas();
     
     draw_background();
@@ -154,30 +156,12 @@ function update(){
 }
 
 function draw_background(){
-    ctx.drawImage(background_img, background_1_x, background_1_y, background_width, background_height);
-    ctx.drawImage(background_img, background_2_x, background_2_y, background_width, background_height);
+    e_ctx.drawImage(background_img, background_1_x, background_1_y, background_width, background_height);
+    e_ctx.drawImage(background_img, background_2_x, background_2_y, background_width, background_height);
 }
 
 
                                                                                                                 //////////// USER MOVEMENT
-
-//function move(value){
-//    if (value > 0){
-//        // Moving in the RIGHT direction
-//        if (user.x >= x_max){
-//            background_1_x -= value;
-//        } else {
-//            user.x += value;
-//        }
-//    } else {
-//        // Moving in the lEFT direction
-//        if (user.x <= x_min){
-//            background_x -= value;
-//        } else {
-//            user.x += value;
-//        }
-//    }
-//}
 
 function move(value){
     if (value > 0){
@@ -346,7 +330,6 @@ function next_walking_frame(orientation){
         user.walking_frame = (user.walking_frame + 1) % user.right_walking_sprite_list.length;
         user.sprite = user.right_walking_sprite_list[user.walking_frame];
     }
-    console.log("next_walking_frame");
 }
 
                                                                                                                 //////////// IMGDATA
@@ -356,20 +339,20 @@ function next_walking_frame(orientation){
 // @return returns an imgdata object given a url
 function url_to_imgdata(url, height, width){
     var imgData;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    e_ctx.clearRect(0, 0, e_canvas.width, e_canvas.height);
     var img = new Image();
     img.src = url;
     
     img.onload = function(){
         if (height == -1 || width == -1){
-            ctx.drawImage(img, 0, 0);
-            imgData = ctx.getImageData(0, 0, img.width, img.height);
+            e_ctx.drawImage(img, 0, 0);
+            imgData = e_ctx.getImageData(0, 0, img.width, img.height);
         } else {
-            ctx.drawImage(img, 0, 0, width, height);
-            imgData = ctx.getImageData(0, 0, width, height);
+            e_ctx.drawImage(img, 0, 0, width, height);
+            imgData = e_ctx.getImageData(0, 0, width, height);
         }
     
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        e_ctx.clearRect(0, 0, e_canvas.width, e_canvas.height);
         return imgData;
     }
 }
@@ -377,13 +360,13 @@ function url_to_imgdata(url, height, width){
 // @param: color is a string for a particular color, eg. red
 function color_to_imgdata(color, width, height){
     var imgData;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    e_ctx.clearRect(0, 0, e_canvas.width, e_canvas.height);
     
-    ctx.fillStyle = color;
-    ctx.fillRect(0, 0, width, height);
-    imgData = ctx.getImageData(0, 0, width, height);
+    e_ctx.fillStyle = color;
+    e_ctx.fillRect(0, 0, width, height);
+    imgData = e_ctx.getImageData(0, 0, width, height);
     
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    e_ctx.clearRect(0, 0, e_canvas.width, e_canvas.height);
     return imgData;
 }
 
@@ -426,11 +409,11 @@ function init_keyboardevents(){
 }
 
 function resize_canvas(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    e_canvas.width = window.innerWidth;
+    e_canvas.height = window.innerHeight;
 
-    HEIGHT = canvas.height;
-    WIDTH = canvas.width;
+    HEIGHT = e_canvas.height;
+    WIDTH = e_canvas.width;
 }
 
 function update_information(){

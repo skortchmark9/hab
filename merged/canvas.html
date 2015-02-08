@@ -6,20 +6,32 @@
         <link href='http://fonts.googleapis.com/css?family=Josefin+Sans:300,400' rel='stylesheet' type='text/css'>
     </head>
     <body>
-        <div id="info">
-            <h1>Information</h1>
-            <h2 id="i_x">user_x</h2>
-            <h2 id="i_y">user_y</h2>
-            <h2 id="i_movement">movement: Resting</h2>
+        <div id="creation">
+            <input type="color" value="#ffffff" onChange="currentColor = this.value">
+
+            <input type="button" id="Fill" value="Fill" onclick="fill(currentColor)">
+            <input type="button" id="Erase" value="Erase" onclick="erase_all()">
+            <input type="button" id="Save" value="Save">
+            <canvas id="creation_canvas" height="500px" width="500px"></canvas>
         </div>
-        <canvas id="canvas" resize></canvas>
+        
+        <div id="environment">
+            <div id="info">
+                <h1>Information</h1>
+                <h2 id="i_x">user_x</h2>
+                <h2 id="i_y">user_y</h2>
+                <h2 id="i_movement">movement: Resting</h2>
+            </div>
+            <canvas id="environment_canvas" resize></canvas>
+        </div>
     </body>
     
-    <script type="text/javascript" src="js/creation.js"></script>
+    <script type="text/javascript"></script>
     <script type="text/javascript" src="js/platform.js"></script>
     <script type="text/javascript">
-        hab.init([]);
-        hab.start();
+            hab.init([]);
+            hab.start();
     </script>
+    <script type="text/javascript" src="js/creation.js"></script>
     
 </html>
