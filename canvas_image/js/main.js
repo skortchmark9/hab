@@ -4,6 +4,10 @@ var ctx = c.getContext("2d");
 var canvasSize = c.width;
 var numPixels = 8;
 var gridSize = canvasSize/numPixels;
+
+var colors = ["#33CC33","#0099FF","#CC99FF","#FF0010"];
+var IND = 0;
+
 console.log(gridSize);
 
 
@@ -44,9 +48,20 @@ function getMousePos(c, evt) {
 
 c.addEventListener("mousemove", function(evt) {
   var mousePos = getMousePos(c, evt);
-  var message = 'Mouse position: ' + Math.ceil(mousePos.x/gridSize) + ',' + Math.ceil(mousePos.y/gridSize);
+  var mouseX = Math.ceil(mousePos.x/gridSize)
+  var mouseY = Math.ceil(mousePos.y/gridSize)
+  var message = 'Mouse position: ' + mouseX + ',' + mouseY;
   console.log(message);
 }, false);
+//Matt's mouseClick Method
+document.getElementById('myCanvas').onclick = function(evt) {
+  var mousePos = getMousePos(c, evt);
+  var mouseX = Math.ceil(mousePos.x/gridSize)
+  var mouseY = Math.ceil(mousePos.y/gridSize)
+  IND = (IND+1)%colors.length;
+  drawpixel(mouseX,mouseY,colors[IND]);
+  console.log('click!')
+}
 
 
 
