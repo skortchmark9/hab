@@ -114,9 +114,6 @@ function init_keyboardevents(){
 }
 
 function update_movement(){
-    if (keys[38]) {
-       // up arrow
-    }
     if (keys[39]) {
         // right arrow
         console.log("Moving Right");
