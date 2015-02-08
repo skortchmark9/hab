@@ -8,10 +8,12 @@ var SpriteSchema = mongoose.Schema({
     name : String,
     author : String,
     pose : String,
-
+    colors : [String],
+    width : Number,
+    height : Number
 });
 
-var Update = mongoose.model('ComicUpdate', UpdateSchema);
+var Update = mongoose.model('SpriteSchema', SpriteSchema);
 
 /* SERVER CONFIGURATION */
 
