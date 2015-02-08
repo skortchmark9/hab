@@ -139,8 +139,6 @@ function erase_all() {
 function save() {
 
     var sprite = flatten(pixelArray)
-    sprite['name'] = $('#name').val();
-    sprite['author'] = $('#author').val();
     sprite['pose'] = $('#pose').val();
 
     $.ajax({
