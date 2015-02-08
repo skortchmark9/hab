@@ -75,7 +75,7 @@ function getMousePos(c, evt) {
 
 c.addEventListener("mousemove", function(evt) {
   var mousePos = getMousePos(c, evt);
-  var message = 'Mouse position: ' + mousePos.x/gridSize + ',' + mousePos.y/gridSize;
+  var message = 'Mouse position: ' + Math.ceil(mousePos.x/gridSize) + ',' + Math.ceil(mousePos.y/gridSize);
   console.log(message);
 }, false);
 
