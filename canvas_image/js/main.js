@@ -6,36 +6,11 @@ var numPixels = 8;
 var gridSize = canvasSize/numPixels;
 var currentColor;
 
+var colors = ["#33CC33","#0099FF","#CC99FF","#FF0010"];
+var IND = 0;
 
-function main(){
-    // Clear the canvas and resize it
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    resize_canvas();
+console.log(gridSize);
 
-    // Draw a red rectangle to the screen
-    ctx.fillStyle = "red";
-    ctx.fillRect(10, 10, 50, 50);
-
-    // Grab image data from the canvas starting at pixel 10, 10
-    imgData=ctx.getImageData(10,10,50,50);
-
-    // Clear the screen again so we can draw the inverted image
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Grab the actual pixel values from the graphical object
-    // image data saved in the form of [p1_red, p1_green, p1_blue, p1_alpha, p2_red....]
-    data = imgData.data;
-
-    // Iterate through all the pixels and invert them
-    for (var i = 0; i < data.length; i += 4) {
-        data[i]     = 225 - data[i];     // red
-        data[i + 1] = 225 - data[i + 1]; // green
-        data[i + 2] = 225 - data[i + 2]; // blue
-    }
-
-    // Draw the image back onto the canvas
-    ctx.putImageData(imgData, 0, 0);
-}
 
 ctx.fillStyle = "#FF0010";
 ctx.fillRect(0,0,c.width,c.height);
@@ -64,6 +39,33 @@ drawPixel(3,7,"#0099FF");
 
 ctx.strokeStyle = "#ddd";
 ctx.stroke();
+
+//Matt's getmouse coordinates function
+function getMousePos(c, evt) {
+  var rect = c.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  };
+}
+
+c.addEventListener("mousemove", function(evt) {
+  var mousePos = getMousePos(c, evt);
+  var mouseX = Math.ceil(mousePos.x/gridSize)
+  var mouseY = Math.ceil(mousePos.y/gridSize)
+  var message = 'Mouse position: ' + mouseX + ',' + mouseY;
+  console.log(message);
+}, false);
+//Matt's mouseClick Method
+document.getElementById('myCanvas').onclick = function(evt) {
+  var mousePos = getMousePos(c, evt);
+  var mouseX = Math.ceil(mousePos.x/gridSize)
+  var mouseY = Math.ceil(mousePos.y/gridSize)
+  IND = (IND+1)%colors.length;
+  drawpixel(mouseX,mouseY,colors[IND]);
+  console.log('click!')
+}
+
 
 
 //ctx.clearRect(0,0,canvasSize,canvasSize);
