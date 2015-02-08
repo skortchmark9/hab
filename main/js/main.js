@@ -35,7 +35,8 @@ function user(x, y){
     
     this.walking_loop;
     this.walking_frame = 0;
-    this.walking_sprite_list = new Array();
+    this.left_walking_sprite_list = new Array();
+    this.right_walking_sprite_list = new Array();
     
     this.draw = function(){
         ctx.putImageData(this.sprite, this.x, this.y);
@@ -43,10 +44,10 @@ function user(x, y){
     
     // TODO
     // custom animations that are binded to keystrokes
-//    this.animation_set = {};
-//    this.add_animation = function(name, animation){
-//        this.animation_set[name] = animation;    
-//    }
+    this.animation_set = {};
+    this.add_animation = function(name, animation){
+        this.animation_set[name] = animation;    
+    }
 }
 
 // @param frames - an array of imgData
@@ -61,10 +62,10 @@ var show_information = true;
 
 var x_min = 400;                // the minimum x-value before the background scrolls
 var x_max = 800;                // the maximum x-value before the background scrolls
-var ground_level = 800;         // ground level measured from the top of the page
+var ground_level = 600;         // ground level measured from the top of the page
 var friction = 0.8;
 var gravity = 0.3;
-var walking_interval = 500;     // the delay before the frame for a walking animation changes
+var walking_interval = 1000;     // the delay before the frame for a walking animation changes
 
 
                                                                                                                 //////////// MAIN
@@ -109,8 +110,11 @@ function main(){
     user.sprite_list.push(color_to_imgdata("blue", 50, 50));
     user.sprite_list.push(color_to_imgdata("red", 50, 50));
     
-    user.walking_sprite_list.push(color_to_imgdata("green", 50, 50));
-    user.walking_sprite_list.push(color_to_imgdata("yellow", 50, 50));
+    user.left_walking_sprite_list.push(color_to_imgdata("green", 50, 50));
+    user.left_walking_sprite_list.push(color_to_imgdata("yellow", 50, 50));
+    
+    user.right_walking_sprite_list.push(color_to_imgdata("orange", 50, 50));
+    user.right_walking_sprite_list.push(color_to_imgdata("purple", 50, 50));
     
     user.sprite = user.sprite_list[0];
 //    user.sprite = url_to_imgdata("img/sprite_1.png", 50, 50); // contamination by cross-origin data
@@ -168,11 +172,13 @@ function update_movement(){
         // up arrow or space
         if(!user.jumping){
             user.jumping = true;
-            user.started_jumping = true;
             user.velY = -user.speed*2;
             user.sprite = user.sprite_list[1];
+            clearInterval(user.walking_loop);
+            
+            
             console.log("Jumping");
-            i_movement.innerHTML = "movement: Jumping"; 
+            i_movement.innerHTML = "movement: Jumping";
         }
     }
     
@@ -183,14 +189,16 @@ function update_movement(){
             user.walking = true;
             console.log("Moving Right");
             i_movement.innerHTML = "movement: Moving Right";
-        }
         
-//        if (!user.jumping){
-//            user.walking_loop = setInterval(function(){
-//                    next_walking_frame();
-//                }, walking_interval
-//            )
-//        }
+            if (!user.jumping){
+                clearInterval(user.walking_loop);
+                next_walking_frame(0);
+                user.walking_loop = setInterval(function(){
+                        next_walking_frame(0);
+                    }, walking_interval
+                )
+            }
+        }
         
         if (user.velX < user.speed) {                         
             user.velX++;                  
@@ -203,6 +211,15 @@ function update_movement(){
             user.walking = true;
             console.log("Moving Left");
             i_movement.innerHTML = "movement: Moving Left"; 
+            
+            if (!user.jumping){
+                clearInterval(user.walking_loop);
+                next_walking_frame(1);
+                user.walking_loop = setInterval(function(){
+                        next_walking_frame(1);
+                    }, walking_interval
+                )
+            }
         }
                  
         if (user.velX > -user.speed) {
@@ -212,11 +229,12 @@ function update_movement(){
     
     // The character is not moving
     if (!keys[39] && !keys[37] && !user.jumping){
+        clearInterval(user.walking_loop);
         if (user.walking){
             user.walking = false;
             console.log("Resting");
             i_movement.innerHTML = "movement: Resting"; 
-            user.sprite = user.sprite_list[1];
+            user.sprite = user.sprite_list[0];
         }
     }
     
@@ -226,39 +244,60 @@ function update_movement(){
         user.velY += gravity;
     }
     
-//    console.log("before moving: " + user.y);
-//    console.log("current velocity: " + user.velY);
     move(user.velX);
     
-//    if (user.y != ground_level){
-//        console.log("Adding velocity");
-//    }
-    
     user.y += user.velY;
-//    console.log(user.y);
     
     // ground_level + gravity 
     if (user.y > ground_level) {
         user.y = ground_level;
-        user.jumping = false;
-        if (!user.landed){
-            user.landed = true;
-        }
         
-        // Return to resting sprite
-//        console.log("Landed");
-        user.sprite = user.sprite_list[0];
+        if (user.jumping){
+            user.landed = true;
+            console.log("Landed");
+            
+            if (keys[39]) { // RIGHT
+                next_walking_frame(0);
+                user.walking_loop = setInterval(function(){
+                        next_walking_frame(0);
+                    }, walking_interval
+                )
+                console.log("Moving Right");
+                i_movement.innerHTML = "movement: Moving Right";
+            }
+            
+            if (keys[37]) { // LEFT
+                next_walking_frame(1);
+                user.walking_loop = setInterval(function(){
+                        next_walking_frame(1);
+                    }, walking_interval
+                )
+                console.log("Moving Left");
+                i_movement.innerHTML = "movement: Moving Left"; 
+            }
+                    
+            // Return to resting sprite
+            //user.sprite = user.sprite_list[0];
+                
+        }
+        user.jumping = false;
+
     }
-    
-//    if (user.landed){
-//        
-//    }
     
 }
 
-function next_walking_frame(){
-    user.walking_frame = user.walking_frame + 1 % user.walking_sprite_list.length;
-    user.sprite = user.walking_sprite_list[user.walking_frame];
+// @param: orientation {1:LEFT, 0:RIGHT} for which direction the character is moving
+function next_walking_frame(orientation){
+    if (orientation == 1){
+        //console.log(user.left_walking_sprite_list.length);
+        user.walking_frame = (user.walking_frame + 1) % user.left_walking_sprite_list.length;
+        console.log(user.walking_frame);
+        user.sprite = user.left_walking_sprite_list[user.walking_frame];
+    } else {
+        user.walking_frame = (user.walking_frame + 1) % user.right_walking_sprite_list.length;
+        user.sprite = user.right_walking_sprite_list[user.walking_frame];
+    }
+    console.log("next_walking_frame");
 }
 
                                                                                                                 //////////// IMGDATA
