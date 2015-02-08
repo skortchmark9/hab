@@ -2,9 +2,9 @@ var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
 var canvasSize = c.width;
-var numPixels = 20;
+var numPixels = 2;
 var gridSize = canvasSize/numPixels;
-var currentColor = '#ffffff';
+var currentColor = '';
 var mouseDown = false;
 
 // init array
@@ -30,21 +30,21 @@ function drawgrid(){
 
 
 function init(){
-
+/*
   for (i=1; i<=numPixels; i++){
     for (j=1; j<=numPixels; j++){
-      drawPixel(i,j,currentColor);
+      //drawPixel(i,j,currentColor);
+
     }
-  }
-  drawgrid();
+  }*/
   drawgrid();
 }
 
 
 function drawPixel(pixFillx, pixFilly, color){
-  color = color || currentColor;
+  //color = color || currentColor;
 
-  pixelArray[pixFillx-1][pixFilly-1] = currentColor;
+  //pixelArray[pixFillx-1][pixFilly-1] = currentColor;
 
   ctx.fillStyle = color;
   ctx.fillRect((pixFillx-1)*gridSize,(pixFilly-1)*gridSize,gridSize,gridSize);
@@ -85,7 +85,7 @@ document.getElementById('myCanvas').onclick = function(evt) {
   drawgrid();
 }
 
-
+// Fill
 document.getElementById('b1').onclick = function() {
   for (i=1; i<=numPixels; i++){
     for (j=1; j<=numPixels; j++){
@@ -95,6 +95,7 @@ document.getElementById('b1').onclick = function() {
   drawgrid();
 }
 
+//erase
 document.getElementById('b2').onclick = function() {
   for (i=1; i<=numPixels; i++){
     for (j=1; j<=numPixels; j++){
@@ -123,5 +124,39 @@ c.addEventListener("mousedown", function() {
 window.addEventListener("mouseup", function() {
   mouseDown = false;
 }, false);
+
+
+//Matt's imageData stuff
+document.getElementById('b3').onclick = function() {
+  ctx.clearRect(0,0,c.width, c.height);
+  drawGridTiny();
+  saveImageData();
+  console.log(c.width);
+  console.log(c.height);
+  ctx.clearRect(0,0,c.width, c.height);
+}
+
+function saveImageData() {
+  var imgData=ctx.getImageData(0,0,numPixels,numPixels);
+}
+
+function drawGridTiny(){
+  for (i=0; i<numPixels; i++){
+    for (j=0; j<numPixels; j++){
+      console.log(pixelArray[i][j]);
+      drawPixelTiny(i,j,pixelArray[i][j]);
+    }
+  }
+  //drawgrid();
+}
+
+function drawPixelTiny(pixFillx, pixFilly, color){
+  if (!color){
+      //color constructor and create with an opacity of zero
+
+  }
+  ctx.fillStyle = color;
+  ctx.fillRect((pixFillx-1),(pixFilly-1),1,1);
+}
 
 init();
