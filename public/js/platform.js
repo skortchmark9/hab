@@ -49,24 +49,12 @@ function user(x, y){
     this.right_walking_sprite_list = new Array();
 
     this.draw = function(){
-        // if (imgData_array) {
-        //     e_ctx.putImageData(imgData_array[0], this.x, this.y);
-        // }
         e_ctx.putImageData(this.sprite, this.x, this.y);
     }
-
-    // TODO
-    // custom animations that are binded to keystrokes
 
     this.custom_sprite = new Array();
 
 }
-
-// @param frames - an array of imgData
-//function animation(frames){
-//    this.frames = frames;
-//}
-
 
 // SETTINGS
 
@@ -279,15 +267,12 @@ function update_movement(){
             user.sprite = user.sprite_list[1];
             clearInterval(user.walking_loop);
 
-
             console.log("Jumping");
             i_movement.innerHTML = "movement: Jumping";
         }
     }
 
     if (keys[39]) {
-        //console.log("right");
-        // right arrow
         if (!user.walking){
             user.walking = true;
             console.log("Moving Right");
@@ -299,7 +284,7 @@ function update_movement(){
                 user.walking_loop = setInterval(function(){
                         next_walking_frame(0);
                     }, walking_interval
-                )
+                );
             }
         }
 
