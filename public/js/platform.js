@@ -22,6 +22,8 @@ var background_1_y = 0;
 var background_2_x = background_1_x - background_width;
 var background_2_y = background_1_y;
 
+var imgData_array;
+
 function user(x, y){
     this.x = x;
     this.y = y;
@@ -75,14 +77,25 @@ var gravity = 0.5;
 var walking_interval = 1000;     // the delay before the frame for a walking animation changes
 
 
-                                                                                                                //////////// MAIN
-
-var _args = {};
 var hab = hab || (function(){
     return {
-        init : function(Args) {
-            // Acquire args from HTML if necessary
-            _args = Args;
+        init : function(arg) {
+            imgData_array = new Array(arg.length);
+            for(var i = 0; i < arg.length; i++) {
+
+                if (arg[i] == null) {
+                    imgData_array[i] = null;
+                    continue;
+                }
+
+                unflatten(arg[i].colors, arg[i].width, arg[i].height);
+
+                imgData_array[i] = e_ctx.getImageData(0,0,arg[i].width, arg[i].height);
+                // e_ctx.clearRect(0,0, e_canvas.width, e_canvas.height);
+                break;
+                console.log(imgData_array);
+
+            }
         },
         start : function(){
             main();
@@ -98,9 +111,11 @@ var hab = hab || (function(){
     };
 }());
 
+
 function main(){
     // Clear the canvas and resize it
     resize_canvas();
+    var num_poses = 10;
 
     // TODO
     // Modularize this later
@@ -112,25 +127,76 @@ function main(){
     // push sprites for the character to use
     // 0 - resting sprite
     // 1 - jumping sprite
-    user.sprite_list.push(color_to_imgdata("blue", 50, 50));
-    user.sprite_list.push(color_to_imgdata("red", 50, 50));
+    var defaults = ["blue", "red", "green", "yellow", "orange", "purple", "white", "red", "blue", "purple"];
 
-    user.left_walking_sprite_list.push(color_to_imgdata("green", 50, 50));
-    user.left_walking_sprite_list.push(color_to_imgdata("yellow", 50, 50));
+    var default_blocks = new Array();
+    for(var i = 0; i < num_poses; i++) {
+        default_blocks.push(color_to_imgdata(defaults[i], 50, 50));
+    }
 
-    user.right_walking_sprite_list.push(color_to_imgdata("orange", 50, 50));
-    user.right_walking_sprite_list.push(color_to_imgdata("purple", 50, 50));
 
-    user.custom_sprite.push(color_to_imgdata("rgba(0,0,0,100)", 50, 50));
-    user.custom_sprite.push(color_to_imgdata("red", 50, 50));
-    user.custom_sprite.push(color_to_imgdata("orange", 50, 50));
-    user.custom_sprite.push(color_to_imgdata("yellow", 50, 50));
-    user.custom_sprite.push(color_to_imgdata("green", 50, 50));
-    user.custom_sprite.push(color_to_imgdata("blue", 50, 50));
-    user.custom_sprite.push(color_to_imgdata("purple", 50, 50));
+    // WALKING
+    if (imgData_array[0] == null){
+        user.sprite_list.push(default_blocks[0]);
+    } else {
+        user.sprite_list.push(imgData_array[0]);
+    }
+
+    // JUMPING
+    if (imgData_array[1] == null){
+        user.sprite_list.push(default_blocks[1]);
+    } else {
+        user.sprite_list.push(imgData_array[1]);
+    }
+
+    // LEFT WALKING
+    if (imgData_array[2] == null){
+        user.left_walking_sprite_list.push(default_blocks[2]);
+    } else {
+        user.left_walking_sprite_list.push(imgData_array[2]);
+    }
+    if (imgData_array[3] == null){
+        user.left_walking_sprite_list.push(default_blocks[3]);
+    } else {
+        user.left_walking_sprite_list.push(imgData_array[3]);
+    }
+    if (imgData_array[4] == null){
+        user.left_walking_sprite_list.push(default_blocks[4]);
+    } else {
+        user.left_walking_sprite_list.push(imgData_array[4]);
+    }
+
+    // RIGHT WALKING
+    if (imgData_array[5] == null){
+        user.right_walking_sprite_list.push(default_blocks[5]);
+    } else {
+        user.right_walking_sprite_list.push(imgData_array[5]);
+    }
+    if (imgData_array[6] == null){
+        user.right_walking_sprite_list.push(default_blocks[6]);
+    } else {
+        user.right_walking_sprite_list.push(imgData_array[6]);
+    }
+    if (imgData_array[7] == null){
+        user.right_walking_sprite_list.push(default_blocks[7]);
+    } else {
+        user.right_walking_sprite_list.push(imgData_array[7]);
+    }
+
+    // CUSTOM ANIMATION
+    if (imgData_array[8] == null){
+        user.right_walking_sprite_list.push(default_blocks[8]);
+    } else {
+        user.right_walking_sprite_list.push(imgData_array[8]);
+    }
+    if (imgData_array[9] == null){
+        user.right_walking_sprite_list.push(default_blocks[9]);
+    } else {
+        user.right_walking_sprite_list.push(imgData_array[9]);
+    }
+
 
     user.sprite = user.sprite_list[0];
-//    user.sprite = url_to_imgdata("img/sprite_1.png", 50, 50); // contamination by cross-origin data, won't work on chrome
 
     init_keyboardevents();
 
@@ -138,8 +204,7 @@ function main(){
         update();
     });
 }
-                                                                                                                //////////// DRAWING and UPDATE
-
+ // DRAWING and UPDATE
 function update(){
     update_movement();
     e_ctx.clearRect(0, 0, e_canvas.width, e_canvas.height);
@@ -160,8 +225,6 @@ function draw_background(){
     e_ctx.drawImage(background_img, background_2_x, background_2_y, background_width, background_height);
 }
 
-
-                                                                                                                //////////// USER MOVEMENT
 
 function move(value){
     if (value > 0){
@@ -297,9 +360,7 @@ function update_movement(){
                 )
                 console.log("Moving Right");
                 i_movement.innerHTML = "movement: Moving Right";
-            }
-
-            if (keys[37]) { // LEFT
+            } else if (keys[37]) { // LEFT
                 next_walking_frame(1);
                 user.walking_loop = setInterval(function(){
                         next_walking_frame(1);
@@ -307,6 +368,9 @@ function update_movement(){
                 )
                 console.log("Moving Left");
                 i_movement.innerHTML = "movement: Moving Left";
+            } else {
+                user.sprite = user.sprite_list[0];
+
             }
 
             // Return to resting sprite
@@ -331,8 +395,6 @@ function next_walking_frame(orientation){
         user.sprite = user.right_walking_sprite_list[user.walking_frame];
     }
 }
-
-                                                                                                                //////////// IMGDATA
 
 // call these at the start of main
 // Setting height or width to -1 creates a sprite with the original height/width
@@ -371,8 +433,6 @@ function color_to_imgdata(color, width, height){
 }
 
 
-
-                                                                                                                //////////// UTILITY FUNCTIONS
 
 function init_keyboardevents(){
 //    window.addEventListener('keydown', key_events, false);

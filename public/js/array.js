@@ -1,12 +1,15 @@
 function unflatten(array, width, height) {
-    var newArray = new Array(height);
-    for(var row = 0; row < height; row++) {
-        newArray[row] = new Array(width);
-        for(var col = 0; col < width; col++) {
-            drawPixel(col + 1, row + 1, array[(row * height) + col]);
+    console.log(array);
+    console.log(width);
+    console.log(height);
+    var newArray = new Array(width);
+    for(var col = 0; col < width; col++) {
+        newArray[col] = new Array(height);
+        for(var row = 0; row < width; row++) {
+            drawPixel(col, row, array[(col * width) + row]);
         }
     }
-    drawgrid();
+    return newArray;
 }
 
 
@@ -17,3 +20,12 @@ function flatten(array) {
     return {width : width, height : height, colors : newArray}
 }
 
+function drawPixel(x, y, color){
+    color = color || currentColor;
+
+    pixelArray[x][y] = color;
+
+    c_ctx.fillStyle = color;
+    c_ctx.clearRect(x * block_size, y * block_size, block_size, block_size);
+    c_ctx.fillRect(x * block_size, y * block_size, block_size, block_size);
+}

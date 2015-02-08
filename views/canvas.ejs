@@ -7,6 +7,21 @@
     <script type="text/javascript" src="vendor/jquery-1.11.2.min.js"></script>
   </head>
   <body>
+
+    <div id="bar">
+        <div class="round-button"><div class="round-button-circle"><h3>Rest</h3></div></div>
+        <div class="round-button"><div class="round-button-circle"><h3>Jump</h3></div></div>
+        <div class="round-button"><div class="round-button-circle"><h3>WR1</h3></div></div>
+        <div class="round-button"><div class="round-button-circle"><h3>WR2</h3></div></div>
+        <div class="round-button"><div class="round-button-circle"><h3>WR3</h3></div></div>
+        <div class="round-button"><div class="round-button-circle"><h3>WL1</h3></div></div>
+        <div class="round-button"><div class="round-button-circle"><h3>WL2</h3></div></div>
+        <div class="round-button"><div class="round-button-circle"><h3>WL3</h3></div></div>
+        <div class="round-button"><div class="round-button-circle"><h3>C1</h3></div></div>
+        <div class="round-button"><div class="round-button-circle"><h3>C2</h3></div></div>
+    </div>
+
+
     <div id="creation">
       <input type="color" id="colorpicker" value="#ffffff" onChange="(currentColor = this.value)">
       <input type="button" id="Fill" value="Fill" onclick="fill(currentColor)">
@@ -37,13 +52,13 @@
       </div>
       <canvas id="environment_canvas" resize></canvas>    </div>
     </body>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/array.js"></script>
 <script type="text/javascript" src="js/platform.js"></script>
 <script>
-  hab.init([]);
-  hab.start();
   var preloaded =<%-JSON.stringify(sprites)%>
+  hab.init(preloaded);
+  hab.start();
 </script>
-<script type="text/javascript" src="js/array.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
 
 

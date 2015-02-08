@@ -16,7 +16,7 @@ var pixelArray; // out 2d pixel array
 
 init();
 function init(){
-    console.log(preloaded);
+
     if (canvas_height > canvas_width){
         block_size = canvas_height / grid_height;
         c_canvas.width = block_size * grid_width;
@@ -63,15 +63,7 @@ function erasePixel(x, y){
     c_ctx.stroke();
 }
 
-function drawPixel(x, y, color){
-    color = color || currentColor;
 
-    pixelArray[x][y] = color;
-
-    c_ctx.fillStyle = color;
-    c_ctx.clearRect(x * block_size, y * block_size, block_size, block_size);
-    c_ctx.fillRect(x * block_size, y * block_size, block_size, block_size);
-}
 //////////// EVENTS
 function getMousePos(evt) {
     var rect = c_canvas.getBoundingClientRect();
