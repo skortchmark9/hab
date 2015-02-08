@@ -51,23 +51,15 @@ for (var y = 0.0; y < c.height; y += gridSize) {
   ctx.lineTo(c.width, y);
 }
 
-// ctx.moveTo(0,0);
-// ctx.lineTo(400,400);
-
 
 function drawpixel(pixFillx, pixFilly, color){
   ctx.fillStyle = color;
   ctx.fillRect((pixFillx-1)*gridSize,(pixFilly-1)*gridSize,gridSize,gridSize);
 }
 
-//for (var i = 1; i < 7; i +++){
-  //for (var j = 1; j < 7; j++){
-    drawpixel(3,4,"#CC99FF");
-    drawpixel(3,7,"#0099FF");
-    //drawpixel(i,j,"#0099FF");
-    //sleep(2);
-  //}
-//}
+drawpixel(3,4,"#CC99FF");
+drawpixel(3,7,"#0099FF");
+
 ctx.strokeStyle = "#ddd";
 ctx.stroke();
 
