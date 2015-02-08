@@ -13,15 +13,19 @@ var HEIGHT = canvas.height;
 var WIDTH = canvas.width;
 
 var background_image;
-var background_x;
-var background_y;
+var background_width = 2000;
+var background_height = 300;
+var background_1_x = 100;
+var background_1_y = 100;
+var background_2_x = background_1_x - background_width;
+var background_2_y = background_1_y;
 
 function user(x, y){
     this.x = x;
     this.y = y;
     this.velX = 0;
     this.velY = 0;
-    this.speed = 3;
+    this.speed = 5;
     
     this.sprite;
     
@@ -32,6 +36,8 @@ function user(x, y){
     this.walking = false;
     this.jumping = false;
     this.landed = true;
+    this.custom = false;    // is character currently using custom sprites
+    this.custom_i = 0;      // current index of the custom sprite
     
     this.walking_loop;
     this.walking_frame = 0;
@@ -44,10 +50,9 @@ function user(x, y){
     
     // TODO
     // custom animations that are binded to keystrokes
-    this.animation_set = {};
-    this.add_animation = function(name, animation){
-        this.animation_set[name] = animation;    
-    }
+
+    this.custom_sprite = new Array();
+    
 }
 
 // @param frames - an array of imgData
@@ -64,7 +69,7 @@ var x_min = 400;                // the minimum x-value before the background scr
 var x_max = 800;                // the maximum x-value before the background scrolls
 var ground_level = 600;         // ground level measured from the top of the page
 var friction = 0.8;
-var gravity = 0.3;
+var gravity = 0.5;
 var walking_interval = 1000;     // the delay before the frame for a walking animation changes
 
 
@@ -98,9 +103,7 @@ function main(){
     // TODO
     // Modularize this later
     background_img = new Image();
-    background_img.src = "img/bg_1.jpg"
-    background_x = 100;
-    background_y = 100;
+    background_img.src = "img/bg_1.jpg";
     
     user = new user(200, ground_level);
     
@@ -116,8 +119,16 @@ function main(){
     user.right_walking_sprite_list.push(color_to_imgdata("orange", 50, 50));
     user.right_walking_sprite_list.push(color_to_imgdata("purple", 50, 50));
     
+    user.custom_sprite.push(color_to_imgdata("rgba(0,0,0,100)", 50, 50));
+    user.custom_sprite.push(color_to_imgdata("red", 50, 50));
+    user.custom_sprite.push(color_to_imgdata("orange", 50, 50));
+    user.custom_sprite.push(color_to_imgdata("yellow", 50, 50));
+    user.custom_sprite.push(color_to_imgdata("green", 50, 50));
+    user.custom_sprite.push(color_to_imgdata("blue", 50, 50));
+    user.custom_sprite.push(color_to_imgdata("purple", 50, 50));
+    
     user.sprite = user.sprite_list[0];
-//    user.sprite = url_to_imgdata("img/sprite_1.png", 50, 50); // contamination by cross-origin data
+//    user.sprite = url_to_imgdata("img/sprite_1.png", 50, 50); // contamination by cross-origin data, won't work on chrome
     
     init_keyboardevents();
     
@@ -125,7 +136,6 @@ function main(){
         update();
     });
 }
-
                                                                                                                 //////////// DRAWING and UPDATE
 
 function update(){
@@ -144,23 +154,62 @@ function update(){
 }
 
 function draw_background(){
-    ctx.drawImage(background_img, background_x, background_y, 2000, 300);
+    ctx.drawImage(background_img, background_1_x, background_1_y, background_width, background_height);
+    ctx.drawImage(background_img, background_2_x, background_2_y, background_width, background_height);
 }
 
+
                                                                                                                 //////////// USER MOVEMENT
+
+//function move(value){
+//    if (value > 0){
+//        // Moving in the RIGHT direction
+//        if (user.x >= x_max){
+//            background_1_x -= value;
+//        } else {
+//            user.x += value;
+//        }
+//    } else {
+//        // Moving in the lEFT direction
+//        if (user.x <= x_min){
+//            background_x -= value;
+//        } else {
+//            user.x += value;
+//        }
+//    }
+//}
 
 function move(value){
     if (value > 0){
         // Moving in the RIGHT direction
         if (user.x >= x_max){
-            background_x -= value;
+            // bg_x DECREASING
+            
+            background_1_x -= value;
+            
+            if (background_1_x < 0){
+                background_2_x = background_1_x;
+                background_1_x = background_1_x + background_width;
+            } else {
+                background_2_x = background_1_x - background_width;
+            }
+            
         } else {
             user.x += value;
         }
     } else {
         // Moving in the lEFT direction
         if (user.x <= x_min){
-            background_x -= value;
+            // bg_x INCREASING
+            background_1_x -= value;
+            
+            if (background_1_x > WIDTH){
+                background_1_x = background_2_x;
+            }
+            
+            background_2_x = background_1_x - background_width;
+            
+            
         } else {
             user.x += value;
         }
@@ -346,15 +395,42 @@ function init_keyboardevents(){
 //    window.addEventListener('keydown', key_events, false);
     document.body.addEventListener("keydown", function(e) {
         keys[e.keyCode] = true;
+        
+        //console.log(e.keyCode);
+        // animation codes are 1 indexed, valid commands are thus 1,2,3,4,5,6,7,8,9
+        if (e.keyCode > 48 && e.keyCode < 58){
+            var i = e.keyCode - 48;
+            if (i <= user.custom_sprite.length){
+                if (i != user.custom_i){
+                    console.log("custom_sprite: " + i);
+                    user.sprite = user.custom_sprite[i-1];
+                    user.custom_i = i;
+                }
+            }
+            user.custom = true;
+        }
+        
+        
     });
     document.body.addEventListener("keyup", function(e) {
         keys[e.keyCode] = false;
+        // animation codes are 1 indexed, valid commands are thus 1,2,3,4,5,6,7,8,9
+        if (e.keyCode > 48 && e.keyCode < 58){
+            var i = e.keyCode - 48;
+            if (i <= user.custom_sprite.length){
+                user.sprite = user.sprite_list[0];
+                user.custom_i = 0;
+            }
+        }
     });
 }
 
 function resize_canvas(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    HEIGHT = canvas.height;
+    WIDTH = canvas.width;
 }
 
 function update_information(){
