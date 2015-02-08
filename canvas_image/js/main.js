@@ -5,6 +5,7 @@ var canvasSize = c.width;
 var numPixels = 20;
 var gridSize = canvasSize/numPixels;
 var currentColor = '#ffffff';
+var mouseDown = false;
 
 // init array
 var pixelArray = new Array(numPixels);
