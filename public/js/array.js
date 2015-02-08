@@ -23,8 +23,8 @@ function flatten(array) {
 
 function drawPixel(x, y, color, environment, scale){
 
-        color = color || currentColor;
-        pixelArray[x][y] = color;
+    color = color || currentColor;
+    pixelArray[x][y] = color;
     if (environment) {
         if (color == "#ffffff"){
             color = "rgba(0,0,0,0)";

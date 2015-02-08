@@ -136,6 +136,20 @@ function erase_all() {
     drawgrid();
 }
 
+
+//creation.style.display = "none";
+var open = false;
+function toggle_display(){
+    if (open){
+        creation.style.display = "none";
+        open = false;
+    }
+     else {
+        creation.style.display = "block";
+        open = true;
+    }
+}
+
 function save() {
     var pose = $('#pose').val();
 
@@ -157,6 +171,16 @@ function save() {
             console.log(response);
         }
     });
+
+    // {
+    //     c_ctx.clearRect(0,0, c_canvas.width, c_canvas.height);
+    //     var imgData = unflatten(sprite.colors, sprite.width, sprite.height, true, 3);
+    //     imgData = c_ctx.getImageData(0,0, sprite.width*3, sprite.height*3);
+    //     user.sprite_list[0] = imgData;
+    // }
+
+    open = false;
+    creation.style.display = "none";
 }
 
 
