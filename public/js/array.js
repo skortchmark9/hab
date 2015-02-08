@@ -3,10 +3,11 @@ function unflatten(array, width, height) {
     console.log(width);
     console.log(height);
     var newArray = new Array(width);
+    console.log('width', width);
     for(var col = 0; col < width; col++) {
         newArray[col] = new Array(height);
         for(var row = 0; row < width; row++) {
-            drawPixel(col, row, array[(col * width) + row]);
+            drawPixel(col, row, array[(col * height) + row]);
         }
     }
     return newArray;
@@ -14,8 +15,8 @@ function unflatten(array, width, height) {
 
 
 function flatten(array) {
-    var width = array[0].length;
-    var height = array.length;
+    var height = array[0].length;
+    var width = array.length;
     newArray = [].concat.apply([], array);
     return {width : width, height : height, colors : newArray}
 }

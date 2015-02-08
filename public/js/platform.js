@@ -89,11 +89,8 @@ var hab = hab || (function(){
                 }
 
                 unflatten(arg[i].colors, arg[i].width, arg[i].height);
-
                 imgData_array[i] = e_ctx.getImageData(0,0,arg[i].width, arg[i].height);
-                // e_ctx.clearRect(0,0, e_canvas.width, e_canvas.height);
-                break;
-                console.log(imgData_array);
+                e_ctx.clearRect(0,0, e_canvas.width, e_canvas.height);
 
             }
         },
