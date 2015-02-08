@@ -33,7 +33,6 @@ function main(){
     ctx.fillRect(10, 10, 50, 50);
     
     // Grab image data from the canvas starting at pixel 10, 10
-    // This is the object that we draw onto the screen
     imgData=ctx.getImageData(10,10,50,50); 
     
     // Clear the screen again so we can draw the inverted image
@@ -52,8 +51,6 @@ function main(){
     
     // Draw the image back onto the canvas
     ctx.putImageData(imgData, 0, 0);
-    
-    //start();
 }
 
 function resize_canvas(){
