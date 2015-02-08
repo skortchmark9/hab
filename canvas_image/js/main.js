@@ -4,6 +4,7 @@ var ctx = c.getContext("2d");
 var canvasSize = c.width;
 var numPixels = 8;
 var gridSize = canvasSize/numPixels;
+console.log(gridSize);
 
 
 
@@ -63,6 +64,19 @@ drawpixel(3,7,"#0099FF");
 ctx.strokeStyle = "#ddd";
 ctx.stroke();
 
+//Matt's getmouse coordinates function
+function getMousePos(c, evt) {
+  var rect = c.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  };
+}
 
+c.addEventListener("mousemove", function(evt) {
+  var mousePos = getMousePos(c, evt);
+  var message = 'Mouse position: ' + mousePos.x/gridSize + ',' + mousePos.y/gridSize;
+  console.log(message);
+}, false);
 
 //ctx.clearRect(0,0,canvasSize,canvasSize);
