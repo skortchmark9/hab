@@ -25,3 +25,30 @@ h2{
     font-weight: normal;
     margin: 0;
 }
+
+
+.green {
+    background-color: #CCFF99;
+}
+
+.blue {
+    background-color: #000099;
+}
+
+.yellow {
+    background-color: #FFFF66;
+}
+
+.box {
+    height: 20px;
+    width: 20px;
+}
+
+.inline-flex {
+  /* @Chen - currently the .flex class is using justify - It'd be nice to have our own flex class for browser compatibility but we should keep it modular - flex should just handle flex.*/
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+}
