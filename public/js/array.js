@@ -26,13 +26,7 @@ function drawPixel(x, y, color, environment, scale){
         color = color || currentColor;
         pixelArray[x][y] = color;
     if (environment) {
-        // var block_size = 3
-        // e_ctx.fillStyle = color;
-        // e_ctx.clearRect(x * block_size, y * block_size, block_size,    block_size);
-        // e_ctx.fillRect(x * block_size, y * block_size, block_size, block_size);
-        console.log(color);
         if (color == "#ffffff"){
-            console.log("drawing transparent");
             color = "rgba(0,0,0,0)";
         }
 

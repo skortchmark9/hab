@@ -55,6 +55,8 @@
 <script type="text/javascript" src="js/platform.js"></script>
 <script>
   var preloaded =<%-JSON.stringify(sprites)%>
+  var character_name =<%-JSON.stringify(name)%>
+  var author_name =<%-JSON.stringify(author)%>
   console.log(preloaded);
   hab.init(preloaded);
   hab.start();

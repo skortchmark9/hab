@@ -137,14 +137,19 @@ function erase_all() {
 }
 
 function save() {
+    var pose = $('#pose').val();
 
-    var sprite = flatten(pixelArray)
-    sprite['pose'] = $('#pose').val();
+    imgData_array[pose] =  c_ctx.getImageData(0, 0, c_canvas.width, c_canvas.height);
+
+    var sprite = flatten(pixelArray);
+    sprite['pose'] = pose;
+    sprite['author'] = author_name;
+    sprite['name'] = character_name;
 
     $.ajax({
         type: 'POST',
         data: {'sprite' : sprite},
-        url: '/',
+        url: '/go',
         success : function(response) {
             erase_all();
             drawGridTiny();

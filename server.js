@@ -45,19 +45,15 @@ app.get('/', function(req, res) {
 });
 
 app.get('/go', function (req, res) {
-    var author = req.param.author;
-    var name = req.param.name;
-
-    author = "sam";
-    name = "guy";
+    var author = req.query.author;
+    var name = req.query.name;
 
     Sprite.find({ 'author': author, 'name' : name }, function (err, spriteDocuments) {
         if (err) {
-            console.log(err);
             return res.status(500).send("Something went wrong.");
         }
+        console.log(spriteDocuments.length);
 
-        console.log(spriteDocuments);
         var numPoses = 10;
         var sprites = new Array(numPoses);
         var numDocuments = spriteDocuments.length;
@@ -66,19 +62,15 @@ app.get('/go', function (req, res) {
             for(var j = 0; j < numDocuments; j++) {
                 if (spriteDocuments[j].pose == i) {
                     sprites[i] = spriteDocuments[j];
-                } else {
-                    console.log(spriteDocuments[j].pose);
-                    console.log(i);
-
                 }
             }
         }
 
-        res.render('canvas', {sprites : sprites});
+        res.render('canvas', {sprites : sprites, author : author, name : name});
     });
 });
 
-app.post('/', function(req, res) {
+app.post('/go', function(req, res) {
     saveSprite(req.body.sprite);
     res.status(200).send({success: true });
 });
