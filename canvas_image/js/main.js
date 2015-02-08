@@ -85,6 +85,24 @@ document.getElementById('myCanvas').onclick = function(evt) {
 }
 
 
+document.getElementById('b1').onclick = function() {
+  for (i=1; i<=numPixels; i++){
+    for (j=1; j<=numPixels; j++){
+      drawPixel(i,j,currentColor);
+    }
+  }
+  drawgrid();
+}
+
+document.getElementById('b2').onclick = function() {
+  for (i=1; i<=numPixels; i++){
+    for (j=1; j<=numPixels; j++){
+      drawPixel(i,j,'#ffffff');
+    }
+  }
+  drawgrid();
+}
+
 c.onclick = function(evt) {
 
   var mousePos = getMousePos(c, evt);
