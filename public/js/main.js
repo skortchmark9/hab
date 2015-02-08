@@ -1,168 +1,156 @@
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
+var c_canvas = document.getElementById("creation_canvas");
+var c_ctx = c_canvas.getContext("2d");
+var creation = document.getElementById("creation");
 
-var canvasSize = c.width;
-var numPixels = 20;
-var gridSize = canvasSize/numPixels;
+var canvas_width = c_canvas.width;
+var canvas_height = c_canvas.height;
+//var numPixels = 20;
+var grid_height = 20;
+var grid_width = 30;
+var block_size;
+
 var currentColor = "#ffffff";
 var mouseDown = false;
 
-// init array
-var pixelArray = new Array(numPixels);
-for (var i = 0; i < numPixels; i++) {
-  pixelArray[i] = new Array(numPixels);
+var pixelArray; // out 2d pixel array
+
+init();
+function init(){
+    if (canvas_height > canvas_width){
+        block_size = canvas_height / grid_height;
+        c_canvas.width = block_size * grid_width;
+        canvas_width = c_canvas.width;
+    } else {
+        block_size = canvas_width/grid_width;
+        c_canvas.height = block_size * grid_height;
+        canvas_height = c_canvas.height;
+    }
+
+    pixelArray = new Array(grid_width);
+    for (var i = 0; i < grid_width; i++) {
+        pixelArray[i] = new Array(grid_height);
+        for (var j = 0; j < grid_height; j++){
+            pixelArray[i][j] = "";
+        }
+    }
+
+    drawgrid();
 }
 
 function drawgrid(){
-  for (var x = 0.0; x < c.width; x += gridSize) {
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, c.height);
-  }
-
-  for (var y = 0.0; y < c.height; y += gridSize) {
-    ctx.moveTo(0, y);
-    ctx.lineTo(c.width, y);
-  }
-
-  ctx.strokeStyle = "#ddd";
-  ctx.stroke();
-}
-
-
-function init(){
-
-  for (i=1; i<=numPixels; i++){
-    for (j=1; j<=numPixels; j++){
-      erasePixel(i,j);
+    for (var x = 0.0; x < c_canvas.width; x += block_size) {
+        c_ctx.moveTo(x, 0);
+        c_ctx.lineTo(x, c_canvas.height);
     }
-  }
-  drawgrid();
+    for (var y = 0.0; y < c_canvas.height; y += block_size) {
+        c_ctx.moveTo(0, y);
+        c_ctx.lineTo(c_canvas.width, y);
+    }
+    c_ctx.strokeStyle = "#ddd";
+    c_ctx.stroke();
 }
 
-function erasePixel(pixFillx, pixFilly){
-
-  pixelArray[pixFillx-1][pixFilly-1] = "";
-
-  ctx.clearRect((pixFillx-1)*gridSize,(pixFilly-1)*gridSize,gridSize,gridSize);
-  //ctx.moveTo((pixFillx-1)*gridSize,(pixFilly-1)*gridSize);
-  //ctx.lineTo((pixFillx)*gridSize,(pixFilly)*gridSize);
-  //ctx.strokeStyle = "#ddd";
-  //ctx.stroke();
+//TODO: Diagonals
+// @param: x-coordinate
+// @param: y-coordinate
+function erasePixel(x, y){
+    drawPixel(x, y, "rgba(0,0,0,0)");
+    pixelArray[x][y] = "";
+    c_ctx.moveTo(x * block_size, x * block_size);
+    c_ctx.lineTo(x * block_size, y * block_size);
+    c_ctx.strokeStyle = "#ddd";
+    c_ctx.stroke();
 }
 
-function drawPixel(pixFillx, pixFilly, color){
-  color = color || currentColor;
+function drawPixel(x, y, color){
+    color = color || currentColor;
 
-  pixelArray[pixFillx-1][pixFilly-1] = color;
+    pixelArray[x][y] = color;
 
-  ctx.fillStyle = color;
-  ctx.clearRect((pixFillx-1)*gridSize,(pixFilly-1)*gridSize,gridSize,gridSize);
-  ctx.fillRect((pixFillx-1)*gridSize,(pixFilly-1)*gridSize,gridSize,gridSize);
+    c_ctx.fillStyle = color;
+    c_ctx.clearRect(x * block_size, y * block_size, block_size, block_size);
+    c_ctx.fillRect(x * block_size, y * block_size, block_size, block_size);
+}
+//////////// EVENTS
+function getMousePos(evt) {
+    var rect = c_canvas.getBoundingClientRect();
+
+    var mouseX = evt.clientX - rect.left;
+    var mouseY = evt.clientY - rect.top;
+
+    return {
+        x: Math.floor(mouseX/block_size),
+        y: Math.floor(mouseY/block_size)
+    };
 }
 
+// DRAW BY MOVING MOUSE
+// If mouse is hold down, draw with it
+c_canvas.addEventListener("mousemove", function(evt) {
+    var mouse_position = getMousePos(evt);
+    if (mouse_position.x >= grid_width || mouse_position.y >= grid_height){
+        return;
+    }
 
+    if (mouseDown && evt.shiftKey) {
+        erasePixel(mouse_position.x, mouse_position.y);
+    }
 
-// getmouse coordinates function
-function getMousePos(c, evt) {
-  var rect = c.getBoundingClientRect();
-  return {
-    x: evt.clientX - rect.left,
-    y: evt.clientY - rect.top
-  };
-}
-
-c.addEventListener("mousemove", function(evt) {
-  var mousePos = getMousePos(c, evt);
-  var mouseX = Math.ceil(mousePos.x/gridSize)
-  var mouseY = Math.ceil(mousePos.y/gridSize)
-
-
-
-  if (mouseDown && !evt.shiftKey) {
-    drawPixel(mouseX, mouseY, currentColor);
-  }
-
-  if (mouseDown && evt.shiftKey) {
-    erasePixel(mouseX, mouseY);
-  }
-
-  var message = 'Mouse position: ' + mouseX + ',' + mouseY;
+    if (mouseDown && !evt.shiftKey) {
+        drawPixel(mouse_position.x, mouse_position.y, currentColor);
+    }
 }, false);
 
+// DRAW BY SIMPLY CLICKING
+// If click occurs without mouse movement
+c_canvas.onclick = function(evt) {
+    var mouse_position = getMousePos(evt);
+    if (mouse_position.x >= grid_width || mouse_position.y >= grid_height){
+        return;
+    }
 
-// mouseClick Method
-document.getElementById('myCanvas').onclick = function(evt) {
-  var mousePos = getMousePos(c, evt);
-  var mouseX = Math.ceil(mousePos.x/gridSize);
-  var mouseY = Math.ceil(mousePos.y/gridSize);
-
-  if (evt.shiftKey) {
-    erasePixel(mouseX, mouseY);
-  } else {
-    drawPixel(mouseX,mouseY,currentColor);
-  }
-  drawgrid();
+    if (evt.shiftKey) {
+        erasePixel(mouse_position.x, mouse_position.y);
+    } else {
+        drawPixel(mouse_position.x, mouse_position.y, currentColor);
+    }
+    drawgrid();
 }
+
+c_canvas.addEventListener("mousedown", function() {
+    mouseDown = true;
+}, false);
+
+c_canvas.addEventListener("mouseup", function() {
+    mouseDown = false;
+}, false);
 
 function fill(color) {
-  for (i=1; i<=numPixels; i++){
-    for (j=1; j<=numPixels; j++){
-      drawPixel(i,j,color);
+    for (i = 0; i < grid_width; i++){
+        for (j = 0; j < grid_height; j++){
+            drawPixel(i, j, color);
+        }
     }
-  }
-  drawgrid();
+    drawgrid();
 }
 
-function erase() {
-  for (i=1; i<=numPixels; i++){
-    for (j=1; j<=numPixels; j++){
-      erasePixel(i,j);
+function erase_all() {
+    for (i = 0; i < grid_width; i++){
+        for (j = 0; j < grid_height; j++){
+            erasePixel(i,j);
+        }
     }
-  }
-  drawgrid();
+    drawgrid();
 }
 
-c.onclick = function(evt) {
+// var imgData;
+// document.getElementById('Save').onclick = function() {
+//     c_ctx.clearRect(0, 0, c_canvas.width, c_canvas.height);
+//     drawGridTiny();
+//     imgData = c_ctx.getImageData(0, 0, canvas_width, canvas_height);
+//     c_ctx.clearRect(0, 0, c_canvas.width, c_canvas.height);
 
-  var mousePos = getMousePos(c, evt);
-  var mouseX = Math.ceil(mousePos.x/gridSize);
-  var mouseY = Math.ceil(mousePos.y/gridSize);
-  if (!evt.shiftKey) {
-    drawPixel(mouseX,mouseY,currentColor);
-  } else {
-    erasePixel(mouseX,mouseY);
-  }
-
-
-  //pixelArray[mouseX-1][mouseY-1] = currentColor;
-
-  drawgrid();
-}
-
-c.addEventListener("mousedown", function() {
-  mouseDown = true;
-}, false);
-
-window.addEventListener("mouseup", function() {
-  mouseDown = false;
-}, false);
-
-
-//Matt's imageData stuff
-document.getElementById('b3').onclick = function() {
-  ctx.clearRect(0,0,c.width, c.height);
-  sendToServer();
-  drawGridTiny();
-  saveImageData();
-  console.log(c.width);
-  console.log(c.height);
-  ctx.clearRect(0,0,c.width, c.height);
-  drawgrid();
-}
-
-function saveImageData() {
-  var imgData=ctx.getImageData(0,0,numPixels,numPixels);
-}
+// }
 
 function sendToServer() {
   var sprite = flatten(pixelArray)
@@ -183,32 +171,18 @@ function sendToServer() {
   });
 }
 
-function drawGridTiny(){
-  for (i=0; i<numPixels; i++){
-    for (j=0; j<numPixels; j++){
-      console.log(pixelArray[i][j]);
-      drawPixelTiny(i,j,pixelArray[i][j]);
-    }
-  }
-  //drawgrid();
-}
 
-function drawPixelTiny(pixFillx, pixFilly, color){
-  if (color!=""){//!color){
-      //color constructor and create with an opacity of zero
-    ctx.fillStyle = color;
-    ctx.fillRect((pixFillx-1),(pixFilly-1),1,1);
-  }
-}
-
-
-
-init();
-
-
-if (preloaded) {
-  console.log(preloaded);
-  newPixelArray = unflatten(preloaded.colors, preloaded.width, preloaded.height);
-
-
-}
+// function drawGridTiny(){
+//     for (i = 0; i < grid_width; i++){
+//         for (j = 0; j < grid_height; j++){
+//             var color = pixelArray[i][j];
+//             if (color != ""){
+//                 c_ctx.fillStyle = color;
+//                 c_ctx.fillRect(i, j, 1, 1);
+//             } else {
+//                 c_ctx.fillStyle = "rgba(255, 255, 255, 0)";
+//                 c_ctx.fillRect(i, j, 1, 1);
+//             }
+//         }
+//     }
+// }
