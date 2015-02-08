@@ -177,7 +177,7 @@ function update_movement(){
     }
     
     if (keys[39]) {
-        console.log("right");
+        //console.log("right");
         // right arrow
         if (!user.walking){
             user.walking = true;
@@ -197,7 +197,7 @@ function update_movement(){
         }
     }
     if (keys[37]) {   
-        console.log("left");              
+        //console.log("left");              
         // left arrow
         if (!user.walking){
             user.walking = true;
@@ -226,8 +226,8 @@ function update_movement(){
         user.velY += gravity;
     }
     
-    console.log("before moving: " + user.y);
-    console.log("current velocity: " + user.velY);
+//    console.log("before moving: " + user.y);
+//    console.log("current velocity: " + user.velY);
     move(user.velX);
     
 //    if (user.y != ground_level){
@@ -235,7 +235,7 @@ function update_movement(){
 //    }
     
     user.y += user.velY;
-    console.log(user.y);
+//    console.log(user.y);
     
     // ground_level + gravity 
     if (user.y > ground_level) {
@@ -247,7 +247,7 @@ function update_movement(){
         
         // Return to resting sprite
 //        console.log("Landed");
-//        user.sprite = user.sprite_list[0];
+        user.sprite = user.sprite_list[0];
     }
     
 //    if (user.landed){
