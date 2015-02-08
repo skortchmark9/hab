@@ -128,7 +128,7 @@ c.onclick = function(evt) {
   var mouseX = Math.ceil(mousePos.x/gridSize);
   var mouseY = Math.ceil(mousePos.y/gridSize);
   if (!evt.shiftKey) {
-    drawPixel(mouseX,mouseY,currentColor);    
+    drawPixel(mouseX,mouseY,currentColor);
   } else {
     erasePixel(mouseX,mouseY);
   }
