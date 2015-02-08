@@ -10,7 +10,6 @@ function unflatten(array, width, height, environment) {
             drawPixel(col, row, array[(col * height) + row], environment);
         }
     }
-    drawgrid();
     return newArray;
 }
 
@@ -28,14 +27,14 @@ function drawPixel(x, y, color, environment){
     pixelArray[x][y] = color;
 
     if (environment) {
+        e_ctx.fillStyle = color;
+        e_ctx.clearRect(x * block_size, y * block_size, block_size,    block_size);
+        e_ctx.fillRect(x * block_size, y * block_size, block_size, block_size);
+    } else {
         c_ctx.fillStyle = color;
         c_ctx.clearRect(x * block_size, y * block_size, block_size,    block_size);
         c_ctx.fillRect(x * block_size, y * block_size, block_size, block_size);
 
-    } else {
-        e_ctx.fillStyle = color;
-        e_ctx.clearRect(x * block_size, y * block_size, block_size,    block_size);
-        e_ctx.fillRect(x * block_size, y * block_size, block_size, block_size);
 
     }
 }
