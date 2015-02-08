@@ -6,10 +6,29 @@
 <input type="button" id="b1" value="Fill" onclick="fill(currentColor)">
 <input type="button" id="b2" value="Erase" onclick="erase()">
 <input type="button" id="b3" value="Save">
-
+<input id="name" type="text" name="name" placeholder="name">
+<input id="author" type="text" name="author" placeholder="author">
+<select name="pose" id="pose">
+  <option value="1">Pose 1</option>
+  <option value="2">Pose 2</option>
+  <option value="3">Pose 3</option>
+  <option value="4">Pose 4</option>
+  <option value="5">Pose 5</option>
+  <option value="6">Pose 6</option>
+  <option value="7">Pose 7</option>
+  <option value="8">Pose 8</option>
+  <option value="9">Pose 9</option>
+  <option value="10">Pose 10</option>
+</select>
 <canvas id="myCanvas" width="400" height="400"
 style="border:1px solid #c3c3c3;">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
+<script>
+  var preloaded =<%-JSON.stringify(sprite)%>
+</script>
+<script type="text/javascript" src="js/array.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
+
+

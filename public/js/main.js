@@ -151,6 +151,7 @@ window.addEventListener("mouseup", function() {
 //Matt's imageData stuff
 document.getElementById('b3').onclick = function() {
   ctx.clearRect(0,0,c.width, c.height);
+  sendToServer();
   drawGridTiny();
   saveImageData();
   console.log(c.width);
@@ -161,6 +162,25 @@ document.getElementById('b3').onclick = function() {
 
 function saveImageData() {
   var imgData=ctx.getImageData(0,0,numPixels,numPixels);
+}
+
+function sendToServer() {
+  var sprite = flatten(pixelArray)
+  sprite['name'] = $('#name').val();
+  sprite['author'] = $('#author').val();
+  sprite['pose'] = $('#pose').val();
+
+  $.ajax({
+      type: 'POST',
+      data: {'sprite' : sprite},
+      url: '/',
+      success : function(response) {
+        console.log(response);
+      },
+      error : function(response) {
+        console.log(response);
+      }
+  });
 }
 
 function drawGridTiny(){
@@ -181,4 +201,14 @@ function drawPixelTiny(pixFillx, pixFilly, color){
   }
 }
 
+
+
 init();
+
+
+if (preloaded) {
+  console.log(preloaded);
+  newPixelArray = unflatten(preloaded.colors, preloaded.width, preloaded.height);
+
+
+}

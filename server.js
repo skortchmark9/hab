@@ -1,48 +1,68 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+mongoose.connect('mongodb://localhost/test');
 
-mongoose.connect('mongodb://james:abc123@ds029831.mongolab.com:29831/comics-server-db');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+    console.log('we good');
+  // yay!
+});
 
 var SpriteSchema = mongoose.Schema({
     name : String,
     author : String,
-    pose : String,
+    pose : Number,
     colors : [String],
     width : Number,
     height : Number
 });
 
-var Update = mongoose.model('SpriteSchema', SpriteSchema);
+var Sprite = mongoose.model('Sprite', SpriteSchema);
+
+
+function saveSprite(sprite) {
+    var newSprite = new Sprite(sprite);
+
+    newSprite.save(function(err, newSprite) {
+      if (err) return console.error(err);
+      console.log('good!');
+    });
+};
+
+function getSprites(name) {
+    Sprite.find({ 'name': name }, function (err, sprites) {
+      if (err) return handleError(err);
+      console.log(sprites);
+    });
+}
 
 /* SERVER CONFIGURATION */
 
 var app = express();
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
+app.use(bodyParser());
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/', function (req, res) {
-    Update.findOne({}, {}, { sort: { 'created_at': -1} }, function(err, newest_update){
+    console.log(req.param.name);
+    Sprite.findOne({'name' : 'Char'}, function(err, sprite) {
         if (err){
             res.status(500).send("Something went wrong.");
         }
-        res.render('canvas', {up: newest_update});
+        res.render('canvas', {sprite: sprite});
     });
 });
 
-app.get('/rss', function (req, res) {
-    Update.findOne({}, {}, { sort: { 'created_at': -1} }, function(err, newest_update){
-        if (err){
-            res.status(500).send("Something went wrong.");
-        }
-        res.render('rss', {up: newest_update});
-    });
+app.post('/', function(req, res) {
+    saveSprite(req.body.sprite);
 });
 
 /*
  * Extract url encoded parameters on requests and put it in req.body
  */
-app.use(bodyParser.urlencoded({extended: false}));
 
 /*
  * Defines the actions we take when the user submits a post
