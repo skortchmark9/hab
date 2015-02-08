@@ -47,8 +47,29 @@ app.get('/', function (req, res) {
     author = "sam";
     name = "guy";
 
-    Sprite.find({ 'author': author, 'name' : name }, function (err, sprites) {
-        if (err) return res.status(500).send("Something went wrong.");
+    Sprite.find({ 'author': author, 'name' : name }, function (err, spriteDocuments) {
+        if (err) {
+            console.log(err);
+            return res.status(500).send("Something went wrong.");
+        }
+
+        console.log(spriteDocuments);
+        var numPoses = 10;
+        var sprites = new Array(numPoses);
+        var numDocuments = spriteDocuments.length;
+        for(var i = 0; i < numPoses; i++) {
+            sprites[i] = null;
+            for(var j = 0; j < numDocuments; j++) {
+                if (spriteDocuments[j].pose == i) {
+                    sprites[i] = spriteDocuments[j];
+                } else {
+                    console.log(spriteDocuments[j].pose);
+                    console.log(i);
+
+                }
+            }
+        }
+
         res.render('canvas', {sprites : sprites});
     });
 });

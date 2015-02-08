@@ -16,7 +16,7 @@ var pixelArray; // out 2d pixel array
 
 init();
 function init(){
-
+    console.log(preloaded);
     if (canvas_height > canvas_width){
         block_size = canvas_height / grid_height;
         c_canvas.width = block_size * grid_width;
