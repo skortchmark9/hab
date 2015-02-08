@@ -49,9 +49,10 @@ function user(x, y){
     this.right_walking_sprite_list = new Array();
 
     this.draw = function(){
-        if (imgData_array) {
-            e_ctx.putImageData(imgData_array[0], this.x, this.y);
-        }
+        // if (imgData_array) {
+        //     e_ctx.putImageData(imgData_array[0], this.x, this.y);
+        // }
+        e_ctx.putImageData(this.sprite, this.x, this.y);
     }
 
     // TODO
