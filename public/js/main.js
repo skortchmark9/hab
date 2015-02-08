@@ -139,7 +139,9 @@ function erase_all() {
 
 //creation.style.display = "none";
 var open = false;
-function toggle_display(){
+function toggle_display(val){
+    $('#pose').val(val);
+
     if (open){
         creation.style.display = "none";
         open = false;

@@ -65,7 +65,7 @@ var x_max = 800;                // the maximum x-value before the background scr
 var ground_level = 600;         // ground level measured from the top of the page
 var friction = 0.8;
 var gravity = 0.5;
-var walking_interval = 1000;     // the delay before the frame for a walking animation changes
+var walking_interval = 100;     // the delay before the frame for a walking animation changes
 var scale = 3;
 
 
