@@ -40,7 +40,11 @@ app.set('views', __dirname + '/views');
 app.use(bodyParser());
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
+    res.render('landing');
+});
+
+app.get('/go', function (req, res) {
     var author = req.param.author;
     var name = req.param.name;
 
@@ -106,7 +110,7 @@ app.post('/submit', function (req, res) {
             });
             newUpdate.save(function(){
                 console.log("saved update!");
-                res.redirect('/');
+                res.redirect('/go');
             });
         }
     });
