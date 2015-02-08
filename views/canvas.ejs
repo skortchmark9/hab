@@ -11,20 +11,20 @@
       <input type="color" id="colorpicker" value="#ffffff" onChange="(currentColor = this.value)">
       <input type="button" id="Fill" value="Fill" onclick="fill(currentColor)">
       <input type="button" id="Erase" value="Erase" onclick="erase_all()">
-      <input type="button" id="Save" value="Save">
+      <input type="button" id="Save" value="Save" onclick="save()">
       <input id="name" type="text" name="name" placeholder="name">
       <input id="author" type="text" name="author" placeholder="author">
       <select name="pose" id="pose">
-        <option value="1">Pose 1</option>
-        <option value="2">Pose 2</option>
-        <option value="3">Pose 3</option>
-        <option value="4">Pose 4</option>
-        <option value="5">Pose 5</option>
-        <option value="6">Pose 6</option>
-        <option value="7">Pose 7</option>
-        <option value="8">Pose 8</option>
-        <option value="9">Pose 9</option>
-        <option value="10">Pose 10</option>
+        <option value="1">Resting</option>
+        <option value="2">Jumping</option>
+        <option value="3">Walking Right 1</option>
+        <option value="4">Walking Right 2</option>
+        <option value="5">Walking Right 3</option>
+        <option value="6">Walking Left 1</option>
+        <option value="7">Walking Left 2</option>
+        <option value="8">Walking Left 3</option>
+        <option value="9">Custom 1</option>
+        <option value="10">Custom 2</option>
       </select>
       <canvas id="creation_canvas" height="500px" width="500px"></canvas>
     </div>
@@ -41,7 +41,7 @@
 <script>
   hab.init([]);
   hab.start();
-  var preloaded =<%-JSON.stringify(sprite)%>
+  var preloaded =<%-JSON.stringify(sprites)%>
 </script>
 <script type="text/javascript" src="js/array.js"></script>
 <script type="text/javascript" src="js/main.js"></script>

@@ -1,6 +1,8 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+
+
 mongoose.connect('mongodb://localhost/test');
 
 var db = mongoose.connection;
@@ -21,22 +23,14 @@ var SpriteSchema = mongoose.Schema({
 
 var Sprite = mongoose.model('Sprite', SpriteSchema);
 
-
 function saveSprite(sprite) {
     var newSprite = new Sprite(sprite);
 
     newSprite.save(function(err, newSprite) {
       if (err) return console.error(err);
-      console.log('good!');
+      console.log('sprite saved!');
     });
 };
-
-function getSprites(name) {
-    Sprite.find({ 'name': name }, function (err, sprites) {
-      if (err) return handleError(err);
-      console.log(sprites);
-    });
-}
 
 /* SERVER CONFIGURATION */
 
@@ -47,17 +41,21 @@ app.use(bodyParser());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/', function (req, res) {
-    console.log(req.param.name);
-    Sprite.findOne({'name' : 'Char'}, function(err, sprite) {
-        if (err){
-            res.status(500).send("Something went wrong.");
-        }
-        res.render('canvas', {sprite: sprite});
+    var author = req.param.author;
+    var name = req.param.name;
+
+    author = "sam";
+    name = "guy";
+
+    Sprite.find({ 'author': author, 'name' : name }, function (err, sprites) {
+        if (err) return res.status(500).send("Something went wrong.");
+        res.render('canvas', {sprites : sprites});
     });
 });
 
 app.post('/', function(req, res) {
     saveSprite(req.body.sprite);
+    res.status(200).send({success: true });
 });
 
 /*

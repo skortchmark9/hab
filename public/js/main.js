@@ -16,6 +16,7 @@ var pixelArray; // out 2d pixel array
 
 init();
 function init(){
+
     if (canvas_height > canvas_width){
         block_size = canvas_height / grid_height;
         c_canvas.width = block_size * grid_width;
@@ -143,46 +144,38 @@ function erase_all() {
     drawgrid();
 }
 
-// var imgData;
-// document.getElementById('Save').onclick = function() {
-//     c_ctx.clearRect(0, 0, c_canvas.width, c_canvas.height);
-//     drawGridTiny();
-//     imgData = c_ctx.getImageData(0, 0, canvas_width, canvas_height);
-//     c_ctx.clearRect(0, 0, c_canvas.width, c_canvas.height);
+function save() {
 
-// }
+    var sprite = flatten(pixelArray)
+    sprite['name'] = $('#name').val();
+    sprite['author'] = $('#author').val();
+    sprite['pose'] = $('#pose').val();
 
-function sendToServer() {
-  var sprite = flatten(pixelArray)
-  sprite['name'] = $('#name').val();
-  sprite['author'] = $('#author').val();
-  sprite['pose'] = $('#pose').val();
-
-  $.ajax({
-      type: 'POST',
-      data: {'sprite' : sprite},
-      url: '/',
-      success : function(response) {
-        console.log(response);
-      },
-      error : function(response) {
-        console.log(response);
-      }
-  });
+    $.ajax({
+        type: 'POST',
+        data: {'sprite' : sprite},
+        url: '/',
+        success : function(response) {
+            erase_all();
+            drawGridTiny();
+        }, error : function(response) {
+            console.log(response);
+        }
+    });
 }
 
 
-// function drawGridTiny(){
-//     for (i = 0; i < grid_width; i++){
-//         for (j = 0; j < grid_height; j++){
-//             var color = pixelArray[i][j];
-//             if (color != ""){
-//                 c_ctx.fillStyle = color;
-//                 c_ctx.fillRect(i, j, 1, 1);
-//             } else {
-//                 c_ctx.fillStyle = "rgba(255, 255, 255, 0)";
-//                 c_ctx.fillRect(i, j, 1, 1);
-//             }
-//         }
-//     }
-// }
+function drawGridTiny(){
+    for (i = 0; i < grid_width; i++){
+        for (j = 0; j < grid_height; j++){
+            var color = pixelArray[i][j];
+            if (color != ""){
+                c_ctx.fillStyle = color;
+                c_ctx.fillRect(i, j, 1, 1);
+            } else {
+                c_ctx.fillStyle = "rgba(255, 255, 255, 0)";
+                c_ctx.fillRect(i, j, 1, 1);
+            }
+        }
+    }
+}
