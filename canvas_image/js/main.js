@@ -61,8 +61,7 @@ document.getElementById('myCanvas').onclick = function(evt) {
   var mousePos = getMousePos(c, evt);
   var mouseX = Math.ceil(mousePos.x/gridSize)
   var mouseY = Math.ceil(mousePos.y/gridSize)
-  IND = (IND+1)%colors.length;
-  drawpixel(mouseX,mouseY,colors[IND]);
+  drawPixel(mouseX,mouseY);
   console.log('click!')
 }
 
