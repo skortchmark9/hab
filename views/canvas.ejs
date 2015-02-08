@@ -9,8 +9,8 @@
   <body>
 
     <div id="bar">
-        <div class="round-button"><div class="round-button-circle"><h3>Rest</h3></div></div>
-        <div class="round-button"><div class="round-button-circle"><h3>Jump</h3></div></div>
+        <div class="round-button" onclick="toggle_display()"><div class="round-button-circle"><h3>Rest</h3></div></div>
+        <div class="round-button" onclick="toggle_display()"><div class="round-button-circle"><h3>Jump</h3></div></div>
         <div class="round-button"><div class="round-button-circle"><h3>WR1</h3></div></div>
         <div class="round-button"><div class="round-button-circle"><h3>WR2</h3></div></div>
         <div class="round-button"><div class="round-button-circle"><h3>WR3</h3></div></div>
@@ -22,7 +22,7 @@
     </div>
 
 
-    <div id="creation">
+    <div id="creation" style="display:none">
       <input type="color" id="colorpicker" value="#ffffff" onChange="(currentColor = this.value)">
       <input type="button" id="Fill" value="Fill" onclick="fill(currentColor)">
       <input type="button" id="Erase" value="Erase" onclick="erase_all()">
