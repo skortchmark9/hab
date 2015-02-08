@@ -1,12 +1,17 @@
+(function() {
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    window.requestAnimationFrame = requestAnimationFrame;
+})();
+
 var canvas = document.getElementsByTagName("canvas")[0];
 var ctx = canvas.getContext("2d");
 
 var i_x = document.getElementById("i_x");
 var i_y = document.getElementById("i_y");
 
-var INTERVAL = 30;
 var user;
 var _args = {};
+var keys = [];
 
 var HEIGHT = canvas.height;
 var WIDTH = canvas.width;
@@ -19,19 +24,40 @@ var background_image;
 function user(x, y){
     this.x = x;
     this.y = y;
+    this.velX = 0;
+    this.velY = 0;
+    this.speed = 3;
+    
     this.sprite;
     this.animation_set = {};
     
-    this.is_walking = false;
-    this.is_jumping = false;
     
+    this.walking = false;
+    this.jumping = false;
+    this.jump_frame = 0;
     
     this.draw = function(){
+//        if (this.is_jumping){
+//        
+//            if (this.jump_frame < 5){
+//                this.y -= 10;
+//                this.jump_frame += 1;
+//            } else {
+//                this.y += 10;
+//                if (this.jump_frame == 9){
+//                    this.jump_frame = 0;
+//                    this.is_jumping = false;
+//                } else {
+//                    this.jump_frame += 1;
+//                }
+//            }
+//            
+//        }
+        
         ctx.putImageData(this.sprite, this.x, this.y);
     }
     this.add_animation = function(name, animation){
-        this.animation_set[name] = animation;
-        
+        this.animation_set[name] = animation;    
     }
 }
 
@@ -48,6 +74,8 @@ var show_information = true;
 var x_min = 400;      // the minimum x-value before the background scrolls
 var x_max = 800;      // the maximum x-value before the background scrolls
 var ground_level = 800;     // ground level measured from the top of the page
+var friction = 0.8;
+var INTERVAL = 20;
 
 
 
@@ -92,58 +120,95 @@ function main(){
 }
 
 function init_keyboardevents(){
-    window.addEventListener('keydown', key_events, false);
+//    window.addEventListener('keydown', key_events, false);
+    document.body.addEventListener("keydown", function(e) {
+        keys[e.keyCode] = true;
+    });
+    document.body.addEventListener("keyup", function(e) {
+        keys[e.keyCode] = false;
+    });
 }
 
-function key_events(event){
-    var key_code = event.keyCode;
-    
-    switch (key_code){
-        // PAUSE FUNCTIONALITY TODO
-        case 71:        // "g" - go
-            start();
-            break;
-        case 83:        // "s" - stop
-            stop();
-            break;
-            
-        // USER MOVEMENT
-        case 37:        // LEFT arrow key
-            move(-10);
-            break;
-        case 38:        // UP arrow key
-            // JUMP
-            user.y -= 5;
-            break;
-        case 39:        // RIGHT arrow key
-            move(10);
-            break;
-//        case 40:        // DOWN arrow key
-//            user.y += 5;
+//function key_events(event){
+//    var key_code = event.keyCode;
+//    
+//    switch (key_code){
+//        // PAUSE FUNCTIONALITY TODO
+//        case 71:        // "g" - go
+//            start();
 //            break;
+//        case 83:        // "s" - stop
+//            stop();
+//            break;
+//            
+//        // USER MOVEMENT
+//        case 37:        // LEFT arrow key
+//            move(-5);
+//            break;
+//        case 38:        // UP arrow key
+//            // JUMP
+//            jump();
+//            //user.y -= 5;
+//            break;
+//        case 39:        // RIGHT arrow key
+//            move(5);
+//            break;
+////        case 40:        // DOWN arrow key
+////            user.y += 5;
+////            break;
+//    }
+//}
+
+function update_movement(){
+    if (keys[38]) {
+       // up arrow
     }
+    if (keys[39]) {
+        // right arrow
+        console.log("Moving Right");
+        if (user.velX < user.speed) {                         
+            user.velX++;                  
+        }          
+    }          
+    if (keys[37]) {                 
+        // left arrow        
+        console.log("Moving Left");          
+        if (user.velX > -user.speed) {
+            user.velX--;
+        }
+    }
+        
+    user.velX *= friction;
+    
+    move(user.velX);
+    user.y += user.velY;
 }
 
 function start(){
-    loop = setInterval(function(){
-            draw();
-        }, INTERVAL
-    )
+//    loop = setInterval(function(){
+//            draw();
+//        }, INTERVAL
+//    )
 }
 
 function stop(){
-    clearInterval(loop);
+//    clearInterval(loop);
 }
 
 //////////// DRAWING
 
-function draw(){
+function update(){
+    console.log("updating");
+    update_movement();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     resize_canvas();
     
     draw_background();
     user.draw();
+    
+    // Update information to draw to the screen for debugging
     update_information();
+    requestAnimationFrame(update);
 }
 
 function draw_background(){
@@ -174,7 +239,6 @@ function move(value){
         if (user.x >= x_max){
             background_x -= value;
         } else {
-            console.log("Moving Right");
             user.x += value;
         }
     } else {
@@ -182,11 +246,16 @@ function move(value){
         if (user.x <= x_min){
             background_x -= value;
         } else {
-            console.log("Moving Left");
             user.x += value;
         }
     }
 }
+
+function jump(){
+    user.is_jumping = true;
+}
+
+//////////// IMGDATA
 
 // call these at the start of main
 // Setting height or width to -1 creates a sprite with the original height/width
@@ -223,3 +292,7 @@ function color_to_imgdata(color, width, height){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     return imgData;
 }
+
+window.addEventListener("load", function(){
+  update();
+});
