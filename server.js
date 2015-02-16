@@ -119,5 +119,5 @@ app.get('*', function(req, res){
 
 var port = process.env.PORT || 3000;
 var server = app.listen(port, function () {
-  console.log('ComicServer listening at http://localhost:' + port);
+  console.log('PixelCraft listening at http://localhost:' + port);
 });
