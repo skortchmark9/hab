@@ -1,7 +1,7 @@
 {
-  "name": "llo",
+  "name": "pixelcraft",
   "version": "0.0.0",
-  "description": "llo ===",
+  "description": "pixelcraft",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,9 +17,9 @@
     "url": "https://github.com/yuzuquats/nodetest/issues"
   },
   "dependencies": {
-    "mongoose": "~3.8.19",
-    "express": "~4.10.2",
-    "ejs": "~1.0.0",
+    "mongoose": "~3.8.x",
+    "express": "~4.10.x",
+    "ejs": "~1.0.x",
     "body-parser": "~1.9.x",
     "underscore": "~1.7.x"
   }

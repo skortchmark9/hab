@@ -2,8 +2,10 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
+var mongoLocation = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL
+|| 'mongodb://localhost/test';
 
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect(mongoLocation);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
